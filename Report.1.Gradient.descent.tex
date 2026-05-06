@@ -1,0 +1,225 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+	\nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+	\nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+	\nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+	\stepcounter{#1}
+	\nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+	\ifnum#1>0
+	\setcounter{homeworkProblemCounter}{#1}
+	\fi
+	\section{Problem \arabic{homeworkProblemCounter}}
+	\setcounter{partCounter}{1}
+	\enterProblemHeader{homeworkProblemCounter}
+}{
+	\exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Labwork 1}
+\newcommand{\hmwkDueDate}{DUE DATE}
+\newcommand{\hmwkClass}{Deep Learning}
+\newcommand{\hmwkClassTime}{}
+\newcommand{\hmwkClassInstructor}{SonTG}
+\newcommand{\hmwkAuthorName}{\textbf{Nguyen Trong Minh}}
+
+%
+% Title Page
+%
+
+\title{
+	\vspace{2in}
+	\textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+	%\normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate}\\
+	\vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
+	\vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+%
+% Various Helper Commands
+%
+
+% Useful for algorithms
+\newcommand{\alg}[1]{\textsc{\bfseries \footnotesize #1}}
+
+% For derivatives
+\newcommand{\deriv}[1]{\frac{\mathrm{d}}{\mathrm{d}x} (#1)}
+
+% For partial derivatives
+\newcommand{\pderiv}[2]{\frac{\partial}{\partial #1} (#2)}
+
+% Integral dx
+\newcommand{\dx}{\mathrm{d}x}
+
+% Alias for the Solution section header
+\newcommand{\solution}{\textbf{\large Solution}}
+
+% Probability commands: Expectation, Variance, Covariance, Bias
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Bias}{\mathrm{Bias}}
+
+\begin{document}
+	
+	\maketitle
+	\pagebreak
+	
+	\begin{homeworkProblem}
+		\solution
+		
+		\subsection{Algorithm Implementation}
+		
+		The Gradient Descent algorithm is implemented to find the minimum of a quadratic function $f(x) = x^2$. The implementation consists of the following components:
+		
+		\begin{itemize}
+			\item \textbf{Forward Function}: Computes the objective function value $f(x) = x^2$.
+			\item \textbf{Gradient Function}: Computes the derivative $f'(x) = 2x$.
+			\item \textbf{Update Rule}: The parameter is updated iteratively using the formula:
+			\[ x_{t+1} = x_t - \eta \cdot \nabla f(x_t) \]
+			where $\eta$ is the learning rate.
+			\item \textbf{Stopping Criterion}: The algorithm stops when the absolute change in the function value between successive iterations falls below the learning rate $\eta$:
+			\[ |f(x_{t+1}) - f(x_t)| < \eta \]
+		\end{itemize}
+		
+		The Python code for this implementation is provided below:
+		
+		\begin{lstlisting}[language=Python, caption=Gradient Descent Implementation]
+def forward(x):
+    return x*x
+
+def gradient(x):
+    return 2*x
+
+def descent(forward, gradient, init, lr=10**(-2)):
+    value = [1,0]
+    time = 0
+    while ((forward(value[1]) - forward(value[0]))**2)**(1/2) >= lr:
+        print(time, ": ", init, " ", forward(init)) 
+        time +=1
+        init -= gradient(init) * lr
+        value[0] = value[1]
+        value[1] = init
+
+descent(forward, gradient, init = 10)
+		\end{lstlisting}
+		
+		\subsection{Effect of Learning Rate Analysis}
+		
+		The learning rate ($\eta$) is a critical hyperparameter that determines the step size at each iteration. For the function $f(x) = x^2$, the update equation can be simplified as:
+		\[ x_{t+1} = x_t - \eta(2x_t) = x_t(1 - 2\eta) \]
+		
+		The behavior of the algorithm varies significantly depending on the value of $\eta$:
+		
+		\begin{enumerate}
+			\item \textbf{Small Learning Rate ($0 < \eta < 0.5$)}: The term $|1 - 2\eta| < 1$ and is positive. The sequence $\{x_t\}$ converges monotonically to the minimum (0). However, if $\eta$ is very small, convergence is extremely slow.
+			\item \textbf{Optimal Learning Rate ($\eta = 0.5$)}: The term $1 - 2\eta = 0$. The algorithm converges to the exact minimum in a single step ($x_1 = 0$).
+			\item \textbf{Moderate Learning Rate ($0.5 < \eta < 1$)}: The term $-1 < 1 - 2\eta < 0$. The algorithm oscillates around the minimum but still converges since the magnitude of $x_t$ decreases over time.
+			\item \textbf{Critical Learning Rate ($\eta = 1$)}: The term $1 - 2\eta = -1$. The sequence oscillates between $x_0$ and $-x_0$ indefinitely without ever converging.
+			\item \textbf{Large Learning Rate ($\eta > 1$)}: The term $|1 - 2\eta| > 1$. The algorithm diverges as the steps become increasingly larger, moving away from the minimum.
+		\end{enumerate}
+		
+	\end{homeworkProblem}
+	
+\end{document}
