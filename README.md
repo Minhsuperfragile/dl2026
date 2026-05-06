@@ -2,6 +2,6 @@ USTH Deep Learning 2026
 =========================
 
 
-* Your name here
+* Nguyen Trong Minh
 * (your nickname here, e.g. Mr. Orange, Mr. MISA, Mr. Macbook....)
 
