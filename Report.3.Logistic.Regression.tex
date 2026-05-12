@@ -112,7 +112,7 @@
 %   - Author
 %
 
-\newcommand{\hmwkTitle}{Labwork 1}
+\newcommand{\hmwkTitle}{Labwork 3}
 \newcommand{\hmwkDueDate}{DUE DATE}
 \newcommand{\hmwkClass}{Deep Learning}
 \newcommand{\hmwkClassTime}{}
@@ -170,7 +170,89 @@
 		\solution
 		
 		\subsection{Algorithm Implementation}
+		We model the estimator model as : 
+        $$ f_{\theta}(x) = \theta_0 * x_0 + \theta_1 * x_1 + \theta_2$$
 		
+		\begin{lstlisting}[language=Python, caption=Foward pass]
+		def forward(x:list[float] , w:list[float]): 
+			return [x_ * w[0] + w[1] for x_ in x]
+		\end{lstlisting}
+		
+		Next is a Loss function so that the model can learn from that: 
+		$$ \mathcal{L}_i = - ( y_i * \log\sigma(\hat{y}_i) + (1-y_i)*\log(1-\sigma(\hat{y}_i)))  $$
+		
+		You might notice that we use $\sigma()$ function in the loss instead of the forward pass.
+		\begin{lstlisting}[language=Python, caption={Loss function}]
+		def loss(x, y, w, z) : 
+			y_pred = forward(x,y,w)
+			L = sum([- (z_ * math.log(sigmoid(y_p)) + (1-z_) * math.log(1-sigmoid(y_p))) for y_p, z_ in zip(y_pred, z)])
+			return L / len(x)
+		\end{lstlisting}
+		
+		The last element we need is gradient step for each $\theta_i$:
+		$$ 
+		\frac{\partial \mathcal{L}}{\partial \theta_0}
+		=
+		\frac{1}{N}
+		\sum_{i=1}^{N}
+		\left(
+		-z_i x_i
+		+
+		x_i \left(1-\sigma(-\hat{y}_i)\right)
+		\right)
+		 $$
+		 
+		$$
+		\frac{\partial \mathcal{L}}{\partial \theta_1}
+		=
+		\frac{1}{N}
+		\sum_{i=1}^{N}
+		\left(
+		-z_i y_i
+		+
+		y_i \left(1-\sigma(-\hat{y}_i)\right)
+		\right)
+		$$
+		
+		$$
+		\frac{\partial \mathcal{L}}{\partial \theta_2}
+		=
+		\frac{1}{N}
+		\sum_{i=1}^{N}
+		\left(
+		1 - z_i - \sigma(-\hat{y}_i)
+		\right)
+		$$
+		
+		\begin{lstlisting}[language=Python, caption={Gradient calculation}]
+		def gradient(x, y, w, z): 
+			y_pred = forward(x, y , w)
+			grad_0 = sum([-z_ * x_ + x_ * (1 - sigmoid(-y_p) ) for x_, z_ , y_p in zip(x,z,y_pred)]) / len(x)
+			
+			grad_1 = sum([-z_ * y_ + y_ * (1 - sigmoid(-y_p)) for y_, z_, y_p in zip(y,z,y_pred)]) / len(x)
+			
+			grad_2 = sum([1 - z_ - sigmoid(-y_p) for z_, y_p in zip(z, y_pred)]) / len(x)
+			
+			return grad_0, grad_1, grad_2 
+		\end{lstlisting}
+		
+		Now we can combine them all, and create a training loop that update $\theta_i = \theta_i - \frac{\partial \mathcal{L}}{\partial \theta_i} * \mu$ where $\mu$ is a learning rate. 
+		
+		\begin{lstlisting}
+		def backward(x,y,z, init=[0,1,2],lr=10**(-1),iter=10**(3) ):
+			for i in range(iter): 
+			L = loss(x,y,init,z)
+			g_0, g_1, g_2 = gradient(x,y,init,z)
+			init[0] -= g_0 * lr
+			init[1] -= g_1 * lr
+			init[2] -= g_2 * lr
+			
+			print(i, L , init)
+			
+			return init
+		\end{lstlisting}
+		
+		 
 		
 	\end{homeworkProblem}
 	
