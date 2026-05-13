@@ -28,6 +28,15 @@ def gradient(x, y, w, z):
 
     return grad_0, grad_1, grad_2 
 
+from matplotlib import pyplot as plt
+
+plt.ion()
+fig, ax = plt.subplots()
+ax.scatter(x, y, c=z)
+line, = ax.plot([], [], 'r-')
+ax.set_ylim(min(y), max(y))
+x1 = [i for i in range(0, 4)]
+
 def backward(x,y,z, init=[0,1,2],lr=10**(-1),iter=10**(3) ):
     for i in range(iter): 
         L = loss(x,y,init,z)
@@ -37,18 +46,18 @@ def backward(x,y,z, init=[0,1,2],lr=10**(-1),iter=10**(3) ):
         init[2] -= g_2 * lr
 
         print(i, L , init)
+        
+        if init[1] != 0:
+            x2 = [ - (x_ * init[0] + init[2]) / init[1] for x_ in x1]
+            line.set_data(x1, x2)
+            ax.set_title(f"Iter: {i}, Loss: {L:.4f}")
+            plt.draw()
+            plt.pause(0.01)
+
+        if L < 0.4: break
 
     return init
 
 w = backward(x,y,z)
-    
-from matplotlib import pyplot as plt
-
-# plot the line
-x1 = [i for i in range(0 , 4) ]
-x2 = [ - (x_ * w[0] + w[2]) / w[1] for x_ in x1]
-
-plt.scatter(x,y, c = z)
-plt.plot(x1,x2)
-plt.ylim(min(y), max(y))
+plt.ioff()
 plt.show()
